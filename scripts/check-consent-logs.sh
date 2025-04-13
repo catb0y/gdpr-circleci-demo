@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CONSENT_LOG="logs/consent.log"
+CONSENT_LOG="src/logs/consent.log"
 
 # Check if the consent log contains  entries related to privacy policy consent
 if grep -q "privacy" "$CONSENT_LOG"; then

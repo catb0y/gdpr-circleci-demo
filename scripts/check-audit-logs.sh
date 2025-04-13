@@ -1,6 +1,6 @@
 #!/bin/bash
 
-AUDIT_LOG="logs/audit.log"
+AUDIT_LOG="src/logs/audit.log"
 
 # Check if the audit log contains entries related to sensitive data access
 if grep -q "sensitive" "$AUDIT_LOG"; then
