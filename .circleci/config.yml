@@ -1,51 +1,31 @@
 version: 2.1
 
 jobs:
-  install_deps:
+  full_gdpr_pipeline:
     docker:
       - image: cimg/python:3.8
     steps:
       - checkout
       - run:
-          name: Install requirements
-          command: pip install -r requirements.txt
-
-  audit_check:
-    docker:
-      - image: cimg/python:3.8
-    steps:
-      - checkout
+          name: Run mock app to generate logs
+          command: |
+            mkdir -p src/logs
+            python src/app.py
       - run:
-          name: Run audit logs check
-          command: ./scripts/check-audit-logs.sh
-
-  consent_check:
-    docker:
-      - image: cimg/python:3.8
-    steps:
-      - checkout
+          name: Check audit logs
+          command: bash src/scripts/check-audit-logs.sh
       - run:
-          name: Run consent logs check
-          command: ./scripts/check-consent-logs.sh
-
-  generate_report:
-    docker:
-      - image: cimg/python:3.8
-    steps:
-      - checkout
+          name: Check consent logs
+          command: bash src/scripts/check-consent-logs.sh
       - run:
-          name: Generate compliance report
-          command: python scripts/generate_report.py
+          name: Generate report
+          command: python src/scripts/generate_report.py
+      - store_artifacts:
+          path: src/logs
+          destination: logs
 
 workflows:
   version: 2
   gdpr_pipeline:
     jobs:
-      - install_deps
-      - audit_check
-      - consent_check
-      - generate_report:
-          requires:
-            - audit_check
-            - consent_check
-
+      - full_gdpr_pipeline
