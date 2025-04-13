@@ -1,70 +1,25 @@
 version: 2.1
 
 jobs:
-  install_deps:
-    docker:
-      - image: cimg/python:3.8
-    steps:
-      - checkout
-
-  run_mock_python_app:
+  full_gdpr_pipeline:
     docker:
       - image: cimg/python:3.8
     steps:
       - checkout
       - run:
-          name: Run mock Python application
+          name: Run mock app to generate logs
           command: |
             mkdir -p src/logs
             python src/app.py
       - run:
-          name: Debug logs
-          command: |
-            ls -l src/logs
-            cat src/logs/audit.log || echo "Missing audit.log"
-            cat src/logs/consent.log || echo "Missing consent.log"
-      - store_artifacts:
-          path: src/logs
-          destination: logs
-
-  audit_check:
-    docker:
-      - image: cimg/python:3.8
-    steps:
-      - checkout
+          name: Check audit logs
+          command: bash src/scripts/check-audit-logs.sh
       - run:
-          name: Run audit logs check
-          command: |
-            ls -l src/logs
-            bash src/scripts/check-audit-logs.sh
-      - store_artifacts:
-          path: src/logs
-          destination: logs
-
-  consent_check:
-    docker:
-      - image: cimg/python:3.8
-    steps:
-      - checkout
+          name: Check consent logs
+          command: bash src/scripts/check-consent-logs.sh
       - run:
-          name: Run consent logs check
-          command: |
-            ls -l src/logs
-            bash src/scripts/check-consent-logs.sh
-      - store_artifacts:
-          path: src/logs/consent.log
-          destination: consent-logs
-
-  generate_report:
-    docker:
-      - image: cimg/python:3.8
-    steps:
-      - checkout
-      - run:
-          name: Generate compliance report
-          command: |
-            ls -l src/logs
-            python src/scripts/generate_report.py
+          name: Generate report
+          command: python src/scripts/generate_report.py
       - store_artifacts:
           path: src/logs
           destination: logs
@@ -73,17 +28,4 @@ workflows:
   version: 2
   gdpr_pipeline:
     jobs:
-      - install_deps
-      - run_mock_python_app:
-          requires:
-            - install_deps
-      - audit_check:
-          requires:
-            - run_mock_python_app
-      - consent_check:
-          requires:
-            - run_mock_python_app
-      - generate_report:
-          requires:
-            - audit_check
-            - consent_check
+      - full_gdpr_pipeline
