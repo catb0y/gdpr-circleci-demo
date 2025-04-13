@@ -27,7 +27,7 @@ jobs:
             cat src/logs/audit.log
             cat src/logs/consent.log
       - persist_to_workspace:
-          root: src/logs
+          root: .
           paths:
             - src/logs
 
