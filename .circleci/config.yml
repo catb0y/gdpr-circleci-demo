@@ -18,6 +18,9 @@ jobs:
       - run:
           name: Run audit logs check
           command: ./scripts/check-audit-logs.sh
+      - store_artifacts:
+          path: ./src/logs/audit.log 
+          destination: audit-logs
 
   consent_check:
     docker:
@@ -27,6 +30,9 @@ jobs:
       - run:
           name: Run consent logs check
           command: ./scripts/check-consent-logs.sh
+      - store_artifacts:
+          path: ./src/logs/consent.log
+          destination: consent-logs
 
   generate_report:
     docker:
@@ -36,6 +42,9 @@ jobs:
       - run:
           name: Generate compliance report
           command: python scripts/generate_report.py
+      - store_artifacts:
+          path: ./src/logs
+          destination: logs
 
   # Run the mock Python app
   run_mock_python_app:
@@ -44,20 +53,34 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Ensure logs directory exists
+          command: |
+            mkdir -p src/logs
+            chmod -R 777 src/logs
+      - run:
           name: Run mock Python application
-          command: python app/app.py
+          command: python src/app.py
+      - store_artifacts:
+          path: ./src/logs
+          destination: logs
 
 workflows:
   version: 2
   gdpr_pipeline:
     jobs:
       - install_deps
-      - audit_check
-      - consent_check
-      - generate_report
+      - audit_check:
+          requires:
+            - install_deps
+      - consent_check:
+          requires:
+            - install_deps
+      - generate_report:
+          requires:
+            - audit_check
+            - consent_check
       - run_mock_python_app:
           requires:
             - install_deps
             - audit_check
             - consent_check
-

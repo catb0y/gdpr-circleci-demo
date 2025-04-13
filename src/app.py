@@ -1,8 +1,8 @@
 import os
 import time
 
-# Simulated logs for audit and consent
-logs_directory = os.path.join(os.getcwd(), 'logs')
+# Paths to logs 
+logs_directory = os.path.join(os.getcwd(), 'src', 'logs')
 audit_log_file = os.path.join(logs_directory, 'audit.log')
 consent_log_file = os.path.join(logs_directory, 'consent.log')
 
