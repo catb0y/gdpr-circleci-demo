@@ -6,6 +6,12 @@ jobs:
       - image: cimg/python:3.8
     steps:
       - checkout
+      - run:
+          name: Ensure permissions and check file existence
+          command: |
+            chmod +x src/scripts/check-consent-logs.sh
+            chmod +x src/scripts/check-audit-logs.sh
+            ls -l src/scripts/  # List the scripts to ensure they exist
 
   audit_check:
     docker:
