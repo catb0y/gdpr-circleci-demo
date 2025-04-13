@@ -2,8 +2,13 @@ import os
 import time
 
 # Simulated logs for audit and consent
-audit_log_file = os.path.join(os.getcwd(), 'logs', 'audit.log')
-consent_log_file = os.path.join(os.getcwd(), 'logs', 'consent.log')
+logs_directory = os.path.join(os.getcwd(), 'logs')
+audit_log_file = os.path.join(logs_directory, 'audit.log')
+consent_log_file = os.path.join(logs_directory, 'consent.log')
+
+# Ensure the 'logs' directory exists
+if not os.path.exists(logs_directory):
+    os.makedirs(logs_directory)
 
 def log_audit_event(user, event_type):
     """Log an audit event."""
