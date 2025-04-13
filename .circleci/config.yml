@@ -40,7 +40,7 @@ jobs:
           at: /workspace
       - run:
           name: Run audit logs check
-          command: src/scripts/check-audit-logs.sh
+          command: /workspace/src/scripts/check-audit-logs.sh
       - store_artifacts:
           path: /workspace/src/logs
           destination: logs
@@ -54,7 +54,7 @@ jobs:
           at: /workspace
       - run:
           name: Run consent logs check
-          command: src/scripts/check-consent-logs.sh
+          command: /workspace/src/scripts/check-consent-logs.sh
       - store_artifacts:
           path: /workspace/src/logs/consent.log
           destination: consent-logs
@@ -68,7 +68,7 @@ jobs:
           at: /workspace
       - run:
           name: Generate compliance report
-          command: python src/scripts/generate_report.py
+          command: python /workspace/src/scripts/generate_report.py
       - store_artifacts:
           path: /workspace/src/logs
           destination: logs
