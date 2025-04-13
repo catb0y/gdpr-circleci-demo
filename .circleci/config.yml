@@ -37,6 +37,16 @@ jobs:
           name: Generate compliance report
           command: python scripts/generate_report.py
 
+  # Run the mock Python app
+  run_mock_python_app:
+    docker:
+      - image: cimg/python:3.8
+    steps:
+      - checkout
+      - run:
+          name: Run mock Python application
+          command: python app/app.py
+
 workflows:
   version: 2
   gdpr_pipeline:
@@ -44,8 +54,10 @@ workflows:
       - install_deps
       - audit_check
       - consent_check
-      - generate_report:
+      - generate_report
+      - run_mock_python_app:
           requires:
+            - install_deps
             - audit_check
             - consent_check
 
