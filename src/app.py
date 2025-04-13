@@ -2,7 +2,7 @@ import os
 import time
 
 # Paths to logs 
-logs_directory = os.path.join(os.getcwd(), 'src', 'logs')
+logs_directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logs')
 audit_log_file = os.path.join(logs_directory, 'audit.log')
 consent_log_file = os.path.join(logs_directory, 'consent.log')
 

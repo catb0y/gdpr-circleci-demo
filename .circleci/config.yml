@@ -6,6 +6,9 @@ jobs:
       - image: cimg/python:3.8
     steps:
       - checkout
+      - run:
+          name: Install dependencies
+          command: pip install -r requirements.txt
 
   audit_check:
     docker:
@@ -48,17 +51,20 @@ jobs:
     docker:
       - image: cimg/python:3.8
     steps:
-      - checkout
+      - checkout  # Only needed if you're modifying the source code
       - run:
-          name: Ensure logs directory exists
+          name: Ensure logs directory exists and set permissions
           command: |
             mkdir -p src/logs
             chmod -R 777 src/logs
       - run:
           name: Run mock Python application
           command: python src/app.py
+      - run:
+          name: Debug logs directory
+          command: ls -l src/logs  # Debug: Show log files to check if they're generated
       - store_artifacts:
-          path: ./src/logs
+          path: src/logs
           destination: logs
 
 workflows:
