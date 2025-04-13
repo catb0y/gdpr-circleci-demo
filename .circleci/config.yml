@@ -7,42 +7,6 @@ jobs:
     steps:
       - checkout
 
-  audit_check:
-    docker:
-      - image: cimg/python:3.8
-    steps:
-      - checkout
-      - run:
-          name: Run audit logs check
-          command: src/scripts/check-audit-logs.sh
-      - store_artifacts:
-          path: src/logs
-          destination: logs
-
-  consent_check:
-    docker:
-      - image: cimg/python:3.8
-    steps:
-      - checkout
-      - run:
-          name: Run consent logs check
-          command: src/scripts/check-consent-logs.sh
-      - store_artifacts:
-          path: src/logs/consent.log
-          destination: consent-logs
-
-  generate_report:
-    docker:
-      - image: cimg/python:3.8
-    steps:
-      - checkout
-      - run:
-          name: Generate compliance report
-          command: python src/scripts/generate_report.py
-      - store_artifacts:
-          path: src/logs
-          destination: logs
-
   run_mock_python_app:
     docker:
       - image: cimg/python:3.8
@@ -55,12 +19,58 @@ jobs:
             chmod -R 777 src/logs
       - run:
           name: Run mock Python application
-          command: python src/app.py 
+          command: python src/app.py
       - run:
-          name: Debug logs directory
-          command: ls -l src/logs
+          name: Verify logs directory and files
+          command: |
+            ls -l src/logs
+            cat src/logs/audit.log
+            cat src/logs/consent.log
+      - persist_to_workspace:
+          root: src/logs
+          paths:
+            - src/logs
+
+  audit_check:
+    docker:
+      - image: cimg/python:3.8
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /workspace
+      - run:
+          name: Run audit logs check
+          command: src/scripts/check-audit-logs.sh
       - store_artifacts:
-          path: src/logs
+          path: /workspace/src/logs
+          destination: logs
+
+  consent_check:
+    docker:
+      - image: cimg/python:3.8
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /workspace
+      - run:
+          name: Run consent logs check
+          command: src/scripts/check-consent-logs.sh
+      - store_artifacts:
+          path: /workspace/src/logs/consent.log
+          destination: consent-logs
+
+  generate_report:
+    docker:
+      - image: cimg/python:3.8
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /workspace
+      - run:
+          name: Generate compliance report
+          command: python src/scripts/generate_report.py
+      - store_artifacts:
+          path: /workspace/src/logs
           destination: logs
 
 workflows:
