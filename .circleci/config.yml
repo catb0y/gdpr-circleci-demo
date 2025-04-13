@@ -14,10 +14,10 @@ jobs:
       - checkout
       - run:
           name: Run audit logs check
-          command: ./scripts/check-audit-logs.sh
+          command: ./src/scripts/check-audit-logs.sh
       - store_artifacts:
-          path: ./src/logs/audit.log 
-          destination: audit-logs
+          path: src/logs
+          destination: logs
 
   consent_check:
     docker:
@@ -26,9 +26,9 @@ jobs:
       - checkout
       - run:
           name: Run consent logs check
-          command: ./scripts/check-consent-logs.sh
+          command: ./src/scripts/check-consent-logs.sh
       - store_artifacts:
-          path: ./src/logs/consent.log
+          path: src/logs/consent.log
           destination: consent-logs
 
   generate_report:
@@ -38,9 +38,9 @@ jobs:
       - checkout
       - run:
           name: Generate compliance report
-          command: python scripts/generate_report.py
+          command: python src/scripts/generate_report.py
       - store_artifacts:
-          path: ./src/logs
+          path: src/logs
           destination: logs
 
   # Run the mock Python app
@@ -53,15 +53,15 @@ jobs:
           name: Ensure logs directory exists and set permissions
           command: |
             mkdir -p src/logs
-            chmod -R 777 src/logs
+            chmod -R 777 src/logs  # Ensure permissions for logs
       - run:
           name: Run mock Python application
-          command: python src/app.py
+          command: python src/app.py 
       - run:
           name: Debug logs directory
           command: ls -l src/logs
       - store_artifacts:
-          path: src/logs
+          path: src/logs  # Store logs in the artifacts
           destination: logs
 
 workflows:

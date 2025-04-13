@@ -6,10 +6,6 @@ logs_directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logs'
 audit_log_file = os.path.join(logs_directory, 'audit.log')
 consent_log_file = os.path.join(logs_directory, 'consent.log')
 
-### testing
-print(f"Audit log file exists: {os.path.exists(audit_log_file)}")
-print(f"Consent log file exists: {os.path.exists(consent_log_file)}")
-
 # Ensure the 'logs' directory exists
 if not os.path.exists(logs_directory):
     os.makedirs(logs_directory)
