@@ -48,7 +48,7 @@ jobs:
     docker:
       - image: cimg/python:3.8
     steps:
-      - checkout  # Only needed if you're modifying the source code
+      - checkout
       - run:
           name: Ensure logs directory exists and set permissions
           command: |
@@ -59,7 +59,7 @@ jobs:
           command: python src/app.py
       - run:
           name: Debug logs directory
-          command: ls -l src/logs  # Debug: Show log files to check if they're generated
+          command: ls -l src/logs
       - store_artifacts:
           path: src/logs
           destination: logs
