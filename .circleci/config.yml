@@ -24,8 +24,8 @@ jobs:
           name: Verify logs directory and files
           command: |
             ls -l src/logs
-            cat src/logs/audit.log
-            cat src/logs/consent.log
+            cat src/logs/audit.log || echo "audit.log not found"
+            cat src/logs/consent.log || echo "consent.log not found"
       - persist_to_workspace:
           root: .
           paths:
@@ -38,6 +38,11 @@ jobs:
       - checkout
       - attach_workspace:
           at: /workspace
+      - run:
+          name: List files in workspace to verify log paths
+          command: |
+            ls -l /workspace/src/logs
+            cat /workspace/src/logs/audit.log || echo "audit.log not found"
       - run:
           name: Run audit logs check
           command: /workspace/src/scripts/check-audit-logs.sh
@@ -52,6 +57,11 @@ jobs:
       - checkout
       - attach_workspace:
           at: /workspace
+      - run:
+          name: List files in workspace to verify log paths
+          command: |
+            ls -l /workspace/src/logs
+            cat /workspace/src/logs/consent.log || echo "consent.log not found"
       - run:
           name: Run consent logs check
           command: /workspace/src/scripts/check-consent-logs.sh
