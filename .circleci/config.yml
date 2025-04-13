@@ -7,13 +7,15 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Ensure permissions and check file existence
+          name: Ensure logs directory exists and check file existence
           command: |
+            mkdir -p src/logs
+            chmod -R 777 src/logs
             chmod +x src/scripts/check-consent-logs.sh
             chmod +x src/scripts/check-audit-logs.sh
             ls -l src/scripts/
-            ls -l src/ 
-            pwd  
+            ls -l src/logs
+            pwd
 
   audit_check:
     docker:
@@ -23,10 +25,10 @@ jobs:
       - run:
           name: Run audit logs check
           command: |
+            mkdir -p src/logs
+            chmod -R 777 src/logs
             echo "Running audit check script"
-            ls -l src/scripts 
-            echo "Current working directory:"
-            pwd
+            ls -l src/scripts
             ls -l src/logs
             src/scripts/check-audit-logs.sh
       - store_artifacts:
@@ -41,12 +43,12 @@ jobs:
       - run:
           name: Run consent logs check
           command: |
+            mkdir -p src/logs
+            chmod -R 777 src/logs
             echo "Running consent check script"
             ls -l src/scripts
-            echo "Current working directory:"
-            pwd
-            ls -l src/logs 
-            src/scripts/check-consent-logs.sh 
+            ls -l src/logs
+            src/scripts/check-consent-logs.sh
       - store_artifacts:
           path: src/logs/consent.log
           destination: consent-logs
@@ -71,8 +73,8 @@ jobs:
       - run:
           name: Ensure logs directory exists and set permissions
           command: |
-            mkdir -p src/logs 
-            chmod -R 777 src/logs 
+            mkdir -p src/logs
+            chmod -R 777 src/logs
       - run:
           name: Run mock Python application
           command: python src/app.py 
@@ -80,7 +82,7 @@ jobs:
           name: Debug logs directory
           command: ls -l src/logs
       - store_artifacts:
-          path: src/logs 
+          path: src/logs
           destination: logs
 
 workflows:
