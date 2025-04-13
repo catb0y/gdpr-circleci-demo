@@ -20,7 +20,7 @@ jobs:
       - checkout
       - run:
           name: Run audit logs check
-          command: ./src/scripts/check-audit-logs.sh
+          command: src/scripts/check-audit-logs.sh
       - store_artifacts:
           path: src/logs
           destination: logs
@@ -32,7 +32,7 @@ jobs:
       - checkout
       - run:
           name: Run consent logs check
-          command: ./src/scripts/check-consent-logs.sh
+          command: src/scripts/check-consent-logs.sh
       - store_artifacts:
           path: src/logs/consent.log
           destination: consent-logs
