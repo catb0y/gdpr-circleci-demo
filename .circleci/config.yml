@@ -52,6 +52,19 @@ jobs:
           path: src/logs
           destination: logs
 
+  dependency_scan:
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - checkout
+      - run:
+          name: Install Snyk
+          command: npm install -g snyk
+      - run:
+          name: Run Snyk Security Scan
+          command: snyk test
+
+
 workflows:
   version: 2
   gdpr_pipeline:
@@ -67,3 +80,6 @@ workflows:
           requires:
             - audit_check
             - consent_check
+      - dependency_scan:
+          requires:
+            - run_mock_python_app
