@@ -6,6 +6,10 @@ audit_log_file = os.path.join(logs_directory, 'audit.log')
 consent_log_file = os.path.join(logs_directory, 'consent.log')
 report_file = os.path.join(logs_directory, 'compliance_report.txt')
 
+# Additional checks
+verify_withdrawal_mechanism = os.path.join(logs_directory, 'consent_banner_check.log')
+third_party_analytics_log = os.path.join(logs_directory, 'third_party_analytics.log')
+
 
 def generate_compliance_report():
     """Generate a compliance report based on the logs."""
@@ -53,6 +57,17 @@ def generate_compliance_report():
         report.append("\nRelevant Consent Events (privacy policy consent):")
         for event in relevant_consent_events:
             report.append(f"- {event.strip()}")
+            
+    # Check for additional logs like consent banner check and third-party analytics
+    if os.path.exists(verify_withdrawal_mechanism):
+        with open(verify_withdrawal_mechanism, 'r') as file:
+            banner_check = file.read().strip()
+        report.append(f"\nConsent Banner Check: {banner_check}")
+    
+    if os.path.exists(third_party_analytics_log):
+        with open(third_party_analytics_log, 'r') as file:
+            third_party_check = file.read().strip()
+        report.append(f"\nThird-Party Analytics Check: {third_party_check}")
 
     # Debugging: Check the path before writing
     print("Writing report to:", report_file)

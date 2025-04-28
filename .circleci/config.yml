@@ -65,6 +65,22 @@ jobs:
           command: snyk test
 
 
+verify_withdrawal_mechanism:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: Validate consent management
+          command: bash src/scripts/validate-consent-management.sh
+
+  third_party_data_handling:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: Validate third-party data handling
+          command: bash src/scripts/third-party-data-handling.sh
+
 workflows:
   version: 2
   gdpr_pipeline:
@@ -81,5 +97,11 @@ workflows:
             - audit_check
             - consent_check
       - dependency_scan:
+          requires:
+            - run_mock_python_app
+      - verify_withdrawal_mechanism:
+          requires:
+            - run_mock_python_app
+      - third_party_data_handling:
           requires:
             - run_mock_python_app
