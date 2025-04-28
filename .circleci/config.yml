@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  full_gdpr_pipeline:
+  run_mock_python_app:
     docker:
       - image: cimg/python:3.8
     steps:
@@ -11,14 +11,42 @@ jobs:
           command: |
             mkdir -p src/logs
             python src/app.py
+      - persist_to_workspace:
+          root: .
+          paths:
+            - src/logs
+
+  audit_check:
+    docker:
+      - image: cimg/python:3.8
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
       - run:
           name: Check audit logs
           command: bash src/scripts/check-audit-logs.sh
+
+  consent_check:
+    docker:
+      - image: cimg/python:3.8
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
       - run:
           name: Check consent logs
           command: bash src/scripts/check-consent-logs.sh
+
+  generate_report:
+    docker:
+      - image: cimg/python:3.8
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
       - run:
-          name: Generate report
+          name: Generate compliance report
           command: python src/scripts/generate_report.py
       - store_artifacts:
           path: src/logs
@@ -28,4 +56,14 @@ workflows:
   version: 2
   gdpr_pipeline:
     jobs:
-      - full_gdpr_pipeline
+      - run_mock_python_app
+      - audit_check:
+          requires:
+            - run_mock_python_app
+      - consent_check:
+          requires:
+            - run_mock_python_app
+      - generate_report:
+          requires:
+            - audit_check
+            - consent_check
