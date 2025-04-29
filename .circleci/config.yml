@@ -69,7 +69,6 @@ jobs:
           command: snyk test --file=requirements.txt --package-manager=pip
 
 
-
   verify_withdrawal_mechanism:
     docker:
       - image: cimg/base:stable
