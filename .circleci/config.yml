@@ -52,25 +52,21 @@ jobs:
           path: src/logs
           destination: logs
 
-  dependency_scan:  # Here
+  dependency_scan:
     docker:
       - image: cimg/python:3.8
     steps:
       - checkout
       - run:
-          name: Install Node.js and Snyk
+          name: Install Node.js 14.x and Snyk
           command: |
             sudo curl -sL https://deb.nodesource.com/setup_14.x | sudo bash -
             sudo apt-get update
             sudo apt-get install -y nodejs
             sudo npm install -g snyk
       - run:
-          name: Install Python dependencies
-          command: pip install -r requirements.txt
-      - run:
           name: Run Snyk Security Scan
           command: snyk test --file=requirements.txt --package-manager=pip
-
 
 
   verify_withdrawal_mechanism:
