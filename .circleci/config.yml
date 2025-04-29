@@ -65,7 +65,7 @@ jobs:
           command: snyk test
 
 
-verify_withdrawal_mechanism:
+  verify_withdrawal_mechanism:
     docker:
       - image: cimg/base:stable
     steps:
