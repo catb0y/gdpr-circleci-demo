@@ -19,6 +19,3 @@ else
 fi
 
 echo "Third-Party Data Handling Validation passed."
-
-
-# testing: here

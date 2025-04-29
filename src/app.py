@@ -59,10 +59,10 @@ def main():
 
     log_consent_event("John Doe", "privacy policy")
     log_consent_event("Jane Smith", "terms of service")
-    log_consent_event("John Doe", "Google Analytics") # here
-    log_consent_event("John Doe", "Facebook Pixel") # here
+    log_consent_event("John Doe", "Google Analytics")
+    log_consent_event("John Doe", "Facebook Pixel")
     
-    # Simulate the consent banner and third-party analytics checks
+    # Simulate consent withdrawal and third-party analytics checks
     log_verify_withdrawal_mechanism("John Doe", "privacy policy")
     log_third_party_analytics_check()
 
