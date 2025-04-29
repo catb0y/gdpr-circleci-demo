@@ -58,11 +58,8 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Snyk
-          command: npm install -g snyk
-      - run:
-          name: Run Snyk Security Scan
-          command: snyk test
+          name: Run Snyk Security Scan with npx
+          command: npx snyk test
 
 
   verify_withdrawal_mechanism:
