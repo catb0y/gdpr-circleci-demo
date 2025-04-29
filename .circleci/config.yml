@@ -61,7 +61,7 @@ jobs:
           at: .
       - run:
           name: Run Snyk Security Scan with npx
-          command: npx snyk test
+          command: snyk test --file=requirements.txt --package-manager=pip  #here
 
 
   verify_withdrawal_mechanism:
