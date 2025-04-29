@@ -7,7 +7,7 @@ consent_log_file = os.path.join(logs_directory, 'consent.log')
 report_file = os.path.join(logs_directory, 'compliance_report.txt')
 
 # Additional checks
-verify_withdrawal_mechanism = os.path.join(logs_directory, 'consent_banner_check.log')
+verify_withdrawal_mechanism = os.path.join(logs_directory, 'verify_withdrawal_mechanism.log')
 third_party_analytics_log = os.path.join(logs_directory, 'third_party_analytics.log')
 
 
@@ -31,6 +31,7 @@ def generate_compliance_report():
     # Check for relevant events in audit and consent logs
     relevant_audit_events = [log for log in audit_logs if 'sensitive' in log]
     relevant_consent_events = [log for log in consent_logs if 'privacy' in log]
+    consent_withdrawals = [log for log in consent_logs if 'withdrawn' in log]
 
     # Add compliance report details to the report list
     report.append("\nCompliance Report")
@@ -58,7 +59,12 @@ def generate_compliance_report():
         for event in relevant_consent_events:
             report.append(f"- {event.strip()}")
             
-    # Check for additional logs like consent banner check and third-party analytics
+    if consent_withdrawals:
+        report.append("\nConsent Withdrawal Events:")
+        for event in consent_withdrawals:
+            report.append(f"- {event.strip()}")
+            
+    # Check for additional logs like withdrawal mechanism check and third-party analytics
     if os.path.exists(verify_withdrawal_mechanism):
         with open(verify_withdrawal_mechanism, 'r') as file:
             banner_check = file.read().strip()

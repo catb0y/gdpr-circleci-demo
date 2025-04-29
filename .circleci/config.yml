@@ -71,7 +71,7 @@ verify_withdrawal_mechanism:
     steps:
       - run:
           name: Validate consent management
-          command: bash src/scripts/validate-consent-management.sh
+          command: bash src/scripts/verify_withdrawal_mechanism.sh
 
   third_party_data_handling:
     docker:

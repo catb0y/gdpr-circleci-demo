@@ -7,7 +7,7 @@ audit_log_file = os.path.join(logs_directory, 'audit.log')
 consent_log_file = os.path.join(logs_directory, 'consent.log')
 
 # Additional logs
-consent_banner_check_log = os.path.join(logs_directory, 'consent_banner_check.log')
+withdrawal_mechanism_log = os.path.join(logs_directory, 'consent_banner_check.log')
 third_party_analytics_log = os.path.join(logs_directory, 'third_party_analytics.log')
 
 
@@ -33,14 +33,14 @@ def log_consent_event(user, consent_type):
         log_file.write(log_entry)
     print(f"Consent event logged: {log_entry.strip()}")
 
-def log_verify_withdrawal_mechanism():
-    """Log a consent banner check."""
+def log_verify_withdrawal_mechanism(user, consent_type):
+    """Log a consent withdrawal event."""
     timestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())
-    log_entry = f'{timestamp} - Consent banner check passed\n'
+    log_entry = f'{timestamp} - {user} withdrawn consent for {consent_type}\n'
     
-    with open(consent_banner_check_log, 'a') as log_file:
+    with open(consent_log_file, 'a') as log_file:
         log_file.write(log_entry)
-    print(f"Consent banner check logged: {log_entry.strip()}")
+    print(f"Consent withdrawal logged: {log_entry.strip()}")
 
 def log_third_party_analytics_check():
     """Log a third-party analytics check."""
@@ -61,7 +61,7 @@ def main():
     log_consent_event("Jane Smith", "terms of service")
     
     # Simulate the consent banner and third-party analytics checks
-    log_verify_withdrawal_mechanism()
+    log_verify_withdrawal_mechanism("John Doe", "privacy policy")
     log_third_party_analytics_check()
 
 if __name__ == '__main__':
